@@ -3,14 +3,17 @@ import io from 'socket.io-client';
 
 import './style.css';
 
+// Client-Side
+
 class Board extends React.Component {
 
     timeout;
-    socket = io.connect("http://localhost:3000");
+    socket = io.connect("http://localhost:4000");
 
     constructor(props) {
         super(props);
 
+        // Listener for canvas
         this.socket.on("canvas-data", function(data){
             var image = new Image();
             var canvas = document.querySelector('#board');
@@ -87,7 +90,7 @@ class Board extends React.Component {
 
     render() {
         return (
-            <div className="sketch" id="sketch">
+            <div className="sketch" id ="sketch">
                 <canvas className="board" id="board"></canvas>
             </div>
         );
