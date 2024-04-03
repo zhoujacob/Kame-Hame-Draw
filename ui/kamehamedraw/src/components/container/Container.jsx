@@ -1,27 +1,24 @@
 import React from "react";
 import Board from '../board/Board';
+import { useParams } from 'react-router-dom';
 
 import './style.css'
 
-class Container extends React.Component{
-    constructor(props){
-        super(props);
-    }
+function Container() {
+    const { roomCode } = useParams(); // Get room code from URL
+    // Add logic to validate room code here
 
-    render(){
-
-        return(
-            <div className="container">
-                <div className="color-picker-container">
-                    <input type="color" />
-                </div>
-
-                <div class="board-container">
-                    <Board></Board>
-                </div>
+    return (
+        <div className="container">
+            <div className="color-picker-container">
+                <input type="color" />
             </div>
-        )
-    }
+
+            <div className="board-container">
+                <Board />
+            </div>
+        </div>
+    );
 }
 
-export default Container
+export default Container;
