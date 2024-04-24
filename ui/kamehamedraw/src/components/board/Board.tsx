@@ -12,7 +12,7 @@ class Board extends Component {
     constructor(props: any) {
         super(props);
 
-        this.socket = io("http://localhost:4000");
+        this.socket = io("https://kame-hame-draw.onrender.com");
 
         // Listener for canvas
         this.socket.on("canvas-data", (data: string) => {
