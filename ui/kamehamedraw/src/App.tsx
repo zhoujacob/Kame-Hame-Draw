@@ -1,8 +1,10 @@
 // App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import Home from './components/pages/Home';
 import Container from './components/container/Container';
+
 
 const App: React.FC = () => {
     return (
