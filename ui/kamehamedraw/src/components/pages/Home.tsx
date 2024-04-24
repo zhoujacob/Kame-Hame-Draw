@@ -15,7 +15,12 @@ const Home: React.FC = () => {
     const joinRoom = () =>{
       // Navigate to container page with input room code
       console.log('Join Room is Clicked');
-      navigate(`/container/${inputCode}`); 
+
+      if (inputCode !== ""){
+        // socket.emit("join_roon", inputCode);
+        navigate(`/container/${inputCode}`); 
+      }
+      
     }
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

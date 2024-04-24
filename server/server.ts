@@ -17,6 +17,11 @@ app.use(cors());
 
 io.on('connection', (socket) => {
     console.log('User Online');
+
+    socket.on("join_room", (data) => {
+        socket.join(data);
+    });
+
     socket.on('canvas-data', (data: any) => {
         socket.broadcast.emit('canvas-data', data);
     });
