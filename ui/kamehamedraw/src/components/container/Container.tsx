@@ -1,11 +1,10 @@
-import React from "react";
-import Board from '../board/Board';
-import { useParams } from 'react-router-dom';
+import Board from '../board/Board'
+// import { useParams } from 'react-router-dom';
 
 import './style.css'
 
 function Container(){
-    const { roomCode } = useParams<{ roomCode : string}>();
+    // const { } = useParams<{ roomCode : string}>();
 
     return (
         <div className="container">

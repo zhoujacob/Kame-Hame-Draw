@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 import './style.css';
@@ -61,7 +61,7 @@ class Board extends Component {
         context.lineCap = 'round';
         context.strokeStyle = 'black';
 
-        canvas.addEventListener('mousedown', (e) => {
+        canvas.addEventListener('mousedown', () => {
             canvas.addEventListener('mousemove', onPaint, false);
         }, false);
 
