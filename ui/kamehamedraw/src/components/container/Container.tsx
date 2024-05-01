@@ -1,11 +1,16 @@
+import React from 'react';
 import Board from '../board/Board'
-// import { useParams } from 'react-router-dom';
+import { Socket } from 'socket.io-client';
 
 import './style.css'
 
-function Container(){
-    // const { } = useParams<{ roomCode : string}>();
+interface ContainerProps {
+    username: string;
+    room: string;
+    socket: Socket;
+}
 
+const Container: React.FC<ContainerProps> = ({ username, room, socket }) => {
     return (
         <div className="container">
             <div className="color-picker-container">
@@ -13,11 +18,10 @@ function Container(){
             </div>
 
             <div className="board-container">
-                <Board />
+                <Board username={username} room={room} socket={socket} />
             </div>
         </div>
     );
 }
 
 export default Container; 
-

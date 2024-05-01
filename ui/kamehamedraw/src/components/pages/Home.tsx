@@ -1,52 +1,57 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { Socket } from 'socket.io-client';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+
 import './style.css';
 
-const Home: React.FC = () => {
-    const navigate = useNavigate();
-    const [inputCode, setInputCode] = useState<string>(""); // State to store input room code
-    
-    const createRoom = () =>{
-      // Generate random room code
-      const roomCode = Math.random().toString(36).substring(7); 
-      navigate(`/container/${roomCode}`);
+interface HomeProps {
+  username: string;
+  setUsername: React.Dispatch<string>;
+  room: string;
+  setRoom: React.Dispatch<string>;
+  socket: Socket;
+}
+
+const Home: React.FC<HomeProps> = ({ username, setUsername, room, setRoom, socket }) => {
+  const navigate = useNavigate(); // Initialize useNavigate hook
+  
+  const joinRoom = () => {
+    if (room !== '' && username !== '') {
+      socket.emit('join_room', { username, room });
+      navigate('/container'); 
     }
+  }
 
-    const joinRoom = () =>{
-      // Navigate to container page with input room code
-      console.log('Join Room is Clicked');
+  return (
+    <div className="home">
+      <div className="homeContainer">
+        <h1>KameHameDraw!!!</h1>
+        <input
+          className="input-container"
+          placeholder="Enter your username"
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <select
+          className="input-container"
+          onChange={(e) => setRoom(e.target.value)}
+        >
+          <option>-- Select Room --</option>
+          <option value='Goku'>Goku</option>
+          <option value='Vegeta'>Vegeta</option>
+          <option value='Zeno'>Zeno</option>
+          <option value='Beerus'>Beerus</option>
+          <option value='Whis'>Whis</option>
+        </select>
 
-      if (inputCode !== ""){
-        // socket.emit("join_roon", inputCode);
-        navigate(`/container/${inputCode}`); 
-      }
-      
-    }
-
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      // Update inputCode state with user input
-      setInputCode(event.target.value); 
-    }
-
-    return (
-      <div className="home">
-        <h1 className="header">KameHameDraw!!!</h1>
-        <p>This is the homepage of our application.</p>
-        <div className="button-container">
-          <button onClick={createRoom} className="createButton">Create Room</button>
-          <div>
-            <input 
-              type="text" 
-              placeholder="Enter room code" 
-              value={inputCode} 
-              onChange={handleInputChange} 
-              className="roomCodeInput"
-            />
-            <button onClick={joinRoom} className="joinButton">Join Room</button>
-          </div>
-        </div>
+        <button
+          className='btn btn-secondary'
+          style={{ width: '100%' }}
+          onClick={joinRoom}
+        > Join Room
+        </button>
       </div>
-    );
+    </div>
+  );
 };
 
 export default Home;
