@@ -6,7 +6,7 @@ import cors from 'cors';
 const APP = express();
 const SERVER = http.createServer(APP);
 // DEPLOY
-const port = process.env.PORT;
+const PORT = process.env.PORT;
 
 // TEST
 // const PORT = 4000;
