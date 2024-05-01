@@ -1,21 +1,54 @@
-import { Component } from 'react';
-import { io, Socket } from 'socket.io-client';
+import React, { useState, useEffect, useRef } from 'react';
+import { Socket } from 'socket.io-client';
+import { useNavigate } from 'react-router-dom';
 
 import './style.css';
 
-// Client-Side
+interface BoardProps {
+    username: string;
+    room: string;
+    socket: Socket;
+}
 
-class Board extends Component {
-    private timeout: NodeJS.Timeout | undefined;
-    private socket: Socket;
+const Board: React.FC<BoardProps> = ({ username, room, socket }) => {
+    const [roomUsers, setRoomUsers] = useState<any[]>([]);
+    const [showPopUp, setShowPopUp] = useState(false);
+    const [popUpMessage, setPopUpMessage] = useState('');
+    const navigate = useNavigate();
+    const timeoutRef = useRef<NodeJS.Timeout>();
 
-    constructor(props: any) {
-        super(props);
+    // Adds the new user to the array of room Users
+    useEffect(() => {
+        const handleDrawingRoomUsers = (data: any[]) => {
+            console.log(data);
+            setRoomUsers(data);
+        };
 
-        this.socket = io("https://kame-hame-draw.onrender.com");
+        socket.on('drawingroom_users', handleDrawingRoomUsers);
 
-        // Listener for canvas
-        this.socket.on("canvas-data", (data: string) => {
+        return () => {
+            socket.off('drawingroom_users', handleDrawingRoomUsers);
+        };
+    }, [socket]);
+
+    // Displays message when a new user joins
+    useEffect(() => {
+        const handleMessageReceived = (data: any[]) => {
+            console.log(data);
+            setShowPopUp(true);
+            
+        };
+    
+        socket.on('receive_message', handleMessageReceived);
+    
+        return () => {
+            socket.off('receive_message', handleMessageReceived);
+        };
+    }, [socket]);
+
+    // Shows canvas data
+    useEffect(() => {
+        const handleCanvasData = (data: string) => {
             const image = new Image();
             const canvas = document.querySelector<HTMLCanvasElement>('#board')!;
             const context = canvas.getContext('2d')!;
@@ -23,15 +56,26 @@ class Board extends Component {
                 context.drawImage(image, 0, 0);
             };
             image.src = data;
-        });
-    }
+        }
 
-    componentDidMount() {
-        this.drawOnCanvas();
-    }
+        socket.on('canvas-data', handleCanvasData);
 
-    drawOnCanvas() {
-        // Accessing 'this' context
+        return () => {
+            socket.off('canvas-data', handleCanvasData);
+        };
+    })
+
+    useEffect(() => {
+        drawOnCanvas();
+    }, []);
+
+    const leaveRoom = () => {
+        const __createdtime__ = Date.now();
+        socket.emit('leave_room', { username, room, __createdtime__ });
+        navigate('/', { replace: true });
+    };
+
+    const drawOnCanvas = () => {
         const canvas = document.querySelector<HTMLCanvasElement>("#board")!;
         const context = canvas.getContext("2d")!;
 
@@ -76,23 +120,21 @@ class Board extends Component {
             context.closePath();
             context.stroke();
 
-            if(this.timeout !== undefined){
-                clearTimeout(this.timeout);
+            if (timeoutRef.current !== undefined){
+                clearTimeout(timeoutRef.current);
             }
-            this.timeout = setTimeout(() => {
+            timeoutRef.current = setTimeout(() => {
                 const base64ImageData = canvas.toDataURL("image/png");
-                this.socket.emit("canvas-data", base64ImageData);
+                socket.emit("canvas-data", base64ImageData);
             }, 1000);
         };
-    }
+    };
 
-    render() {
-        return (
-            <div className="sketch" id="sketch">
-                <canvas className="board" id="board"></canvas>
-            </div>
-        );
-    }
-}
+    return (
+        <div className="sketch" id="sketch">
+            <canvas className="board" id="board"></canvas>
+        </div>
+    );
+};
 
 export default Board;
