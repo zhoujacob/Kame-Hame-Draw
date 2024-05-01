@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Socket } from 'socket.io-client';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 import './style.css';
 
@@ -14,13 +14,20 @@ const Board: React.FC<BoardProps> = ({ username, room, socket }) => {
     const [roomUsers, setRoomUsers] = useState<any[]>([]);
     const [showPopUp, setShowPopUp] = useState(false);
     const [popUpMessage, setPopUpMessage] = useState('');
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const timeoutRef = useRef<NodeJS.Timeout>();
+
+    // SO DEPLOYMENT DOESN'T CRASH
+    console.log(popUpMessage);
+    console.log(setPopUpMessage);
+    console.log(username);
+    console.log(room);
 
     // Adds the new user to the array of room Users
     useEffect(() => {
         const handleDrawingRoomUsers = (data: any[]) => {
             console.log(data);
+            console.log(roomUsers);
             setRoomUsers(data);
         };
 
@@ -35,6 +42,7 @@ const Board: React.FC<BoardProps> = ({ username, room, socket }) => {
     useEffect(() => {
         const handleMessageReceived = (data: any[]) => {
             console.log(data);
+            console.log(showPopUp);
             setShowPopUp(true);
             
         };
@@ -69,11 +77,11 @@ const Board: React.FC<BoardProps> = ({ username, room, socket }) => {
         drawOnCanvas();
     }, []);
 
-    const leaveRoom = () => {
-        const __createdtime__ = Date.now();
-        socket.emit('leave_room', { username, room, __createdtime__ });
-        navigate('/', { replace: true });
-    };
+    // const leaveRoom = () => {
+    //     const __createdtime__ = Date.now();
+    //     socket.emit('leave_room', { username, room, __createdtime__ });
+    //     navigate('/', { replace: true });
+    // };
 
     const drawOnCanvas = () => {
         const canvas = document.querySelector<HTMLCanvasElement>("#board")!;
