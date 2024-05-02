@@ -6,10 +6,10 @@ import cors from 'cors';
 const APP = express();
 const SERVER = http.createServer(APP);
 // DEPLOY
-// const PORT = process.env.PORT;
+const PORT = process.env.PORT;
 
 // TEST
-const PORT = 4000;
+// const PORT = 4000;
 
 const ANNOUNCER = 'Announcer';
 const IO = new Server(SERVER, {

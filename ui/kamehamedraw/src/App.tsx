@@ -7,10 +7,10 @@ import Home from './components/pages/Home';
 import Container from './components/container/Container'
 
 // Deployment
-// const socket = io("https://kame-hame-draw.onrender.com"); 
+const socket = io("https://kame-hame-draw.onrender.com"); 
 
 // Testing
-const socket = io("http://localhost:4000");
+// const socket = io("http://localhost:4000");
 
 const App: React.FC = () => {
 
