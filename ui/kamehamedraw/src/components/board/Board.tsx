@@ -12,14 +12,10 @@ interface BoardProps {
 
 const Board: React.FC<BoardProps> = ({ username, room, socket }) => {
     const [roomUsers, setRoomUsers] = useState<any[]>([]);
-    const [showPopUp, setShowPopUp] = useState(false);
-    const [popUpMessage, setPopUpMessage] = useState('');
     // const navigate = useNavigate();
     const timeoutRef = useRef<NodeJS.Timeout>();
 
     // SO DEPLOYMENT DOESN'T CRASH
-    console.log(popUpMessage);
-    console.log(setPopUpMessage);
     console.log(username);
     console.log(room);
 
@@ -35,22 +31,6 @@ const Board: React.FC<BoardProps> = ({ username, room, socket }) => {
 
         return () => {
             socket.off('drawingroom_users', handleDrawingRoomUsers);
-        };
-    }, [socket]);
-
-    // Displays message when a new user joins
-    useEffect(() => {
-        const handleMessageReceived = (data: any[]) => {
-            console.log(data);
-            console.log(showPopUp);
-            setShowPopUp(true);
-            
-        };
-    
-        socket.on('receive_message', handleMessageReceived);
-    
-        return () => {
-            socket.off('receive_message', handleMessageReceived);
         };
     }, [socket]);
 
