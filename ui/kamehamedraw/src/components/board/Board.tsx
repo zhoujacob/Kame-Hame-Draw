@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Socket } from 'socket.io-client';
-// import { useNavigate } from 'react-router-dom';
 
 import './style.css';
 
@@ -12,16 +11,9 @@ interface BoardProps {
 
 const Board: React.FC<BoardProps> = ({ username, room, socket }) => {
     const [roomUsers, setRoomUsers] = useState<any[]>([]);
-    const [showPopUp, setShowPopUp] = useState(false);
-    const [popUpMessage, setPopUpMessage] = useState('');
-    // const navigate = useNavigate();
     const timeoutRef = useRef<NodeJS.Timeout>();
 
-    // SO DEPLOYMENT DOESN'T CRASH
-    console.log(popUpMessage);
-    console.log(setPopUpMessage);
-    console.log(username);
-    console.log(room);
+
 
     // Adds the new user to the array of room Users
     useEffect(() => {
@@ -33,24 +25,8 @@ const Board: React.FC<BoardProps> = ({ username, room, socket }) => {
 
         socket.on('drawingroom_users', handleDrawingRoomUsers);
 
-        return () => {
+        return () => { 
             socket.off('drawingroom_users', handleDrawingRoomUsers);
-        };
-    }, [socket]);
-
-    // Displays message when a new user joins
-    useEffect(() => {
-        const handleMessageReceived = (data: any[]) => {
-            console.log(data);
-            console.log(showPopUp);
-            setShowPopUp(true);
-            
-        };
-    
-        socket.on('receive_message', handleMessageReceived);
-    
-        return () => {
-            socket.off('receive_message', handleMessageReceived);
         };
     }, [socket]);
 
@@ -76,12 +52,6 @@ const Board: React.FC<BoardProps> = ({ username, room, socket }) => {
     useEffect(() => {
         drawOnCanvas();
     }, []);
-
-    // const leaveRoom = () => {
-    //     const __createdtime__ = Date.now();
-    //     socket.emit('leave_room', { username, room, __createdtime__ });
-    //     navigate('/', { replace: true });
-    // };
 
     const drawOnCanvas = () => {
         const canvas = document.querySelector<HTMLCanvasElement>("#board")!;
