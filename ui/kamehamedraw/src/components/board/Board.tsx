@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Socket } from 'socket.io-client';
-// import { useNavigate } from 'react-router-dom';
 
 import './style.css';
 
@@ -12,12 +11,9 @@ interface BoardProps {
 
 const Board: React.FC<BoardProps> = ({ username, room, socket }) => {
     const [roomUsers, setRoomUsers] = useState<any[]>([]);
-    // const navigate = useNavigate();
     const timeoutRef = useRef<NodeJS.Timeout>();
 
-    // SO DEPLOYMENT DOESN'T CRASH
-    console.log(username);
-    console.log(room);
+
 
     // Adds the new user to the array of room Users
     useEffect(() => {
@@ -29,7 +25,7 @@ const Board: React.FC<BoardProps> = ({ username, room, socket }) => {
 
         socket.on('drawingroom_users', handleDrawingRoomUsers);
 
-        return () => {
+        return () => { 
             socket.off('drawingroom_users', handleDrawingRoomUsers);
         };
     }, [socket]);
@@ -56,12 +52,6 @@ const Board: React.FC<BoardProps> = ({ username, room, socket }) => {
     useEffect(() => {
         drawOnCanvas();
     }, []);
-
-    // const leaveRoom = () => {
-    //     const __createdtime__ = Date.now();
-    //     socket.emit('leave_room', { username, room, __createdtime__ });
-    //     navigate('/', { replace: true });
-    // };
 
     const drawOnCanvas = () => {
         const canvas = document.querySelector<HTMLCanvasElement>("#board")!;

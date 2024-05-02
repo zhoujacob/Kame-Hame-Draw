@@ -19,6 +19,9 @@ const IO = new Server(SERVER, {
     }
 });
 
+const LEAVEROOM = (socketId: string, users: any[]) => {
+    return users.filter(user => user.id !== socketId);
+};
 
 let drawingRoom = '';
 let drawingRoomUsers: any[] = [];
@@ -55,6 +58,23 @@ IO.on('connection', (socket) => {
 
     socket.on('canvas-data', (data: any) => {
         socket.broadcast.emit('canvas-data', data);
+    });
+
+    socket.on('leave_room', (data: any) => {
+        console.log("Enter");
+        const { username, room } = data;
+        socket.leave(room);
+        const __createdtime__ = Date.now();
+
+        // Remove user from memory
+        allUsers = LEAVEROOM(socket.id, allUsers);
+        socket.to(room).emit('drawingroom_users', allUsers);
+        socket.to(room).emit('receive_message', {
+            username: ANNOUNCER,
+            message: `${username} has left the chat`,
+            __createdtime__,
+        });
+        console.log(`${username} has left the chat`);
     });
 });
 
